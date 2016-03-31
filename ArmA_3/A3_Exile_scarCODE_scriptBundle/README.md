@@ -4,6 +4,11 @@ All client-side (mission-file) scripts are located in `mpmissions\Exile.MapName\
 All server-side scripts are located in `@ExileServer\addons` <br />
 *Please note that some scripts need both server and client side code installed for it to work!* <br /> <br />
 
+#### How to download?
+**Because of its new location, the download process is a little different:** <br />
+Click the .7z file and then click the "Raw" button. You will then get the required files/folders inside of a packed .7z :) <br />
+<br />
+
 #### Scripts in this bundle
 **1. Global Messenger** is a small and light-weight admin tool for sending stylish news-style messages to all players<br />
 **2. introCamera** does a little camera intro when the player is logged in <br />
