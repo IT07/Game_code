@@ -1,6 +1,11 @@
 # A3_Epoch_VEMF_Reloaded
 **Not to confuse with VEMF.** <br /><br />
 
+#### How to download?
+**Because of its new location, the download process is a little different:** <br />
+Click the .7z file and then click the "Raw" button. You will then get the exile_vemf_reloaded folder and the Exile.MapName folder inside of a packed .7z :) <br />
+<br />
+
 #### How to install?
 **Server-side files** <br />
 - copy the `Epoch_VEMF_Reloaded` folder over into where your server's `@epochhive\addons\` folder is located.<br />
