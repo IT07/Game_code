@@ -1,0 +1,18 @@
+#include "scarCODE\global.hpp" // Needed if you use any GUI element from scarCODE
+class cfgFunctions
+{
+	class scarCODE
+	{
+		tag = "SC";
+		class serverLogo
+		{
+			file = "scarCODE\SL\functions_SL";
+			class showWatermark { postInit = 1; };
+		};
+	};
+};
+
+class RscTitles
+{
+	#include "scarCODE\SL\main_SL.hpp"
+};

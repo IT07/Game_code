@@ -1,0 +1,26 @@
+/////// scarCODE hpp files ///////
+#include "scarCODE\global.hpp" // Needed if you use any menu from scarCODE. WARNING: Does not matter how much menus from scarCODE you have, ONLY include this file ONCE
+#include "scarCODE\SIM\main_SIM.hpp"
+//////////////////////////////////
+
+class cfgFunctions
+{
+	/////// scarCODE functions ///////
+	class scarCODE
+	{
+		tag = "SC"; // Can only be placed ONCE in this file
+		class SIM
+		{
+			file = "scarCODE\SIM\functions_SIM";
+			class getliveSimData {};
+			class getSimSetting {};
+			class setLiveSimData {};
+			class setSimContent {};
+			class setSimCtrlText {};
+			class loadSIM {};
+			class initSIM { postInit = 1; };
+			//class initSIM_SA { postInit = 1; }; // Leave this line commented if using SCMP
+		};
+		// Place additional classes that belong to the scarCODE class below
+	};
+};

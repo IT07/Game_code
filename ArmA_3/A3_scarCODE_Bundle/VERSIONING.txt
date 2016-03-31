@@ -1,0 +1,9 @@
+/////// scarCODE VERSIONING SYSTEM ///////
+
+Example: v0.0632
+		  | ||||
+		  |	|||+ [TYPE] 0: PRE-ALPHA | 1: ALPHA | 2: BETA | 3: STABLE   
+		  |	||+ [PATCH COUNT] How many patches/fixes/small things added
+		  |	|+ [PATCH INCR] +1 if previous hits 10 which is (0)
+		  |	+ [STABLE COUNT] How much stable releases
+		  + [STABLE INCR] If previous hits 10, this will be +1

@@ -1,0 +1,11 @@
+#include "scarCODE\cfgDefines.hpp"
+
+class cfgFunctions
+{
+	#include "scarCODE\cfgFunctions.hpp"
+};
+
+class RscTitles
+{
+	#include "scarCODE\rscTitles.hpp"
+};

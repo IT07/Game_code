@@ -1,0 +1,7 @@
+/////// scarCODE VERSIONING SYSTEM ///////
+
+Example 1:	v0.0000.1
+Example 2:	v0.0001.1
+Example 3:	v0.0002.1
+And so on...
+Numbers change depending on how much has been edited since last version

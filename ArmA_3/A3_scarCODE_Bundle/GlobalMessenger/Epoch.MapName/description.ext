@@ -1,0 +1,28 @@
+/////// scarCODE hpp files ///////
+#include "scarCODE\global.hpp" // Needed if you use any menu from scarCODE
+//////////////////////////////////
+class cfgFunctions
+{
+	/////// scarCODE functions ///////
+	class scarCODE
+	{
+		tag = "SC";
+		class GM // Global Messenger
+		{
+			file = "scarCODE\GM\functions_GM";
+			class gmGetSetting {};
+			class newsMessage {};
+			class sendGlobalNews {};
+			class initGM { postInit = 1; };
+		};
+	};
+};
+
+class RscTitles
+{
+	#include "scarCODE\GM\main_GM.hpp"
+};
+
+/////// IMPORTANT INSTALLATION INSTRUCTIONS ///////
+// - if you already have a cfgFunctions section in your description.ext, then simply merge the classes inside of the cfgFunctions in this file with your cfgFunctions.
+// might sound complicated but really it is not. Just take a good look at it and take your time. You'll figure it out.
