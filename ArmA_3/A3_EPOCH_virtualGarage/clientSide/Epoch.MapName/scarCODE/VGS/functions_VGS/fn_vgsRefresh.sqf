@@ -92,7 +92,7 @@ if not isNil"_dsp" then
                                     {
                                         _add = true
                                     };
-                                    case (_x isKindOf "Helicopter"):
+                                    case (_x isKindOf "Air"):
                                     {
                                         _add = true
                                     };
