@@ -27,7 +27,7 @@ if not isNil"_dsp" then
 			_ctrlFeedback ctrlSetText "Selected vehicle check #1 complete.";
 			_ctrlFeedback ctrlSetText "Building check complete.";
 			_range = "range" call SC_fnc_vgsGetClientSetting;
-			_vehs = (position player) nearEntities [['Air','Car','MotorCycle','Tank'], _range];
+			_vehs = (position player) nearEntities [['Air','Car','MotorCycle','Tank','Ship'], _range];
 			if (_index < (count _vehs)) then
 			{
 				_ctrlFeedback ctrlSetText "Selected vehicle check #2 complete.";
