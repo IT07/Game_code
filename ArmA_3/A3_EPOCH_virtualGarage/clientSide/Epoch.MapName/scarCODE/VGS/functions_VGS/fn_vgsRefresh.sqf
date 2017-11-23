@@ -33,7 +33,7 @@ if not isNil"_dsp" then
                     _ctrlNoVehs = _dsp displayCtrl 1006;
                     _ctrlFeedBack  = _dsp displayCtrl 1002;
                     _range = "range" call SC_fnc_vgsGetClientSetting;
-                    _vehs = (position player) nearEntities [['Air','Car','MotorCycle','Tank'], _range];
+                    _vehs = (position player) nearEntities [['Air','Car','MotorCycle','Tank','Ship'], _range];
                     if (count _vehs > 0) then
                     {
                         private ["_remVeh"];
@@ -97,6 +97,10 @@ if not isNil"_dsp" then
                                         _add = true
                                     };
                                     case (_x isKindOf "MotorCycle"):
+                                    {
+                                        _add = true
+                                    };
+									case (_x isKindOf "Ship"):
                                     {
                                         _add = true
                                     };
