@@ -1,5 +1,9 @@
 // Add this to epoch_config/Configs/CfgFunctions.hpp
-
+// within the class CfgFunctions
+/*
+class cfgFunctions
+{
+*/
 	/////// scarCODE functions ///////
 	class scarCODE
 	{
@@ -14,6 +18,8 @@
 			class vgsMoveIn {};
 			class vgsTrash {};
 			class vgsWaitForChange {};
+			class vgsRecvFromServer {};
+			class dynaMenuCondition {};
 			class vgsInitClient { postInit = 1; };
 		};
 	};

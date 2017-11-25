@@ -42,14 +42,11 @@ if not isNil"_dsp" then
 										if (typeName EPOCH_vgsMyKey isEqualTo "STRING") then
 										{
 											_ctrlFeedback ctrlSetText "Key has correct typeName.";
-											EPOCH_vgsPV = ["Trash",[_curSel, player, EPOCH_vgsMyKey]];
-											publicVariableServer "EPOCH_vgsPV";
-											EPOCH_vgsPV = nil;
+											[_curSel, player, EPOCH_vgsMyKey] remoteExec ["VGS_fnc_vgsTrashFromGarage",2];
 											_ctrlFeedback ctrlSetText "Requesting data from server...";
 											_changed = [_vehs, "EPOCH_vgsMyGarage"] call SC_fnc_vgsWaitForChange;
 											if _changed then
 											{
-												_reload = ["Inside"] call SC_fnc_vgsRefresh;
 												_ctrlFeedback ctrlSetText "Vehicle deleted.";
 											};
 										};

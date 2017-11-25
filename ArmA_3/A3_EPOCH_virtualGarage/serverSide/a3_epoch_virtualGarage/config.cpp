@@ -7,6 +7,7 @@
 
 class cfgVGS
 {
+	debug = 0; // 0 = OFF
 	maxGarageSlots = 7; // Self-explenatory, right?
 	vehBlacklist[] = {"O_Truck_Big_cock_F"}; // Put classnames of disallowed vehicles in here
 };
@@ -34,6 +35,11 @@ class cfgFunctions
 			file = "\a3_epoch_virtualGarage\functions_VGS";
 			class vgsGetServerSetting {};
 			class vgsGenKey {};
+			class vgsWriteToGarage {};
+			class vgsReadFromGarage {};
+			class vgsTrashFromGarage {};
+			class vgsRequestGarage {};
+			class vgsRequestKey {};
 			class vgsInitServer { postInit = 1; };
 		};
 	};

@@ -1,5 +1,7 @@
 /*
     Author: IT07
+	
+	Contributor: DirtySanchez from DonkeyPunch.INFO
 
     Description:
     moves given selected vehicle INTO the virtual garage
@@ -115,26 +117,9 @@ if not isNil"_dsp" then
 											if (typeName EPOCH_vgsMyKey isEqualTo "STRING") then
 											{
 												_ctrlFeedback ctrlSetText "Key has correct typeName.";
-												EPOCH_vgsPV = ["Write",[_slot, _veh, player, EPOCH_vgsMyKey]];
-												publicVariableServer "EPOCH_vgsPV";
-												EPOCH_vgsPV = nil;
+												[_slot, _veh, player, EPOCH_vgsMyKey] remoteExec ["VGS_fnc_vgsWriteToGarage",2];
 												_ctrlFeedback ctrlSetText "Requesting data from server...";
-												_changed = [_vehs, "EPOCH_vgsMyGarage"] call SC_fnc_vgsWaitForChange;
-												if _changed then
-												{
-													_ctrlFeedback ctrlSetText "Reloading outside vehicles...";
-													_refreshed = ["Outside"] call SC_fnc_vgsRefresh;
-													if _refreshed then
-													{
-														_ctrlFeedback ctrlSetText "Reloading garage vehicles...";
-														_refreshed = ["Inside"] call SC_fnc_vgsRefresh;
-														if _refreshed then
-														{
-															_lbInsideGarage ctrlEnable true;
-															_ctrlFeedback ctrlSetText "Loading done.";
-														};
-													};
-												};
+												_lbInsideGarage ctrlEnable true;
 											};
 										};
 									};
