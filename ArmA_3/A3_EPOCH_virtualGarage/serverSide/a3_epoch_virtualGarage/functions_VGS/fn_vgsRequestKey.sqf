@@ -31,7 +31,7 @@ if (isNil "_keys") then { uiNamespace setVariable ["EPOCH_vgsKeys", []] };
 	if (_playerObj isEqualTo (_x select 0)) then 
 	{
 		_keys = _keys - [_x];
-		diag_log format["[EPOCH VGS]: RequestKey removing old player key - data:%1", _x];
+		if (_debug isEqualTo 1) then {diag_log format["[EPOCH VGS]: RequestKey removing old player key - data:%1", _x]};
 	};
 }forEach _keys;
 
@@ -51,14 +51,14 @@ _keys = uiNamespace getVariable "EPOCH_vgsKeys";
 	if isNull _k then
 	{
 		_keys = _keys - [_x];
-		diag_log format["[EPOCH VGS]: RequestKey removing null player key - data:%1", _x];
+		if (_debug isEqualTo 1) then {diag_log format["[EPOCH VGS]: RequestKey removing null player key - data:%1", _x]};
 	};
 	if not isNull _k then
 	{
 		if (side _k isEqualTo civilian) then
 		{
 			_keys = _keys - [_x];
-			diag_log format["[EPOCH VGS]: RequestKey removing dead player key - data:%1", _x];
+			if (_debug isEqualTo 1) then {diag_log format["[EPOCH VGS]: RequestKey removing dead player key - data:%1", _x]};
 		};
 	};
 }forEach _keys;
