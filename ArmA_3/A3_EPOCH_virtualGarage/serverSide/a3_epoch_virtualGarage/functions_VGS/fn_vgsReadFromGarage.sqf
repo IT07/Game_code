@@ -10,7 +10,7 @@
 	remoteExecCall to client garage contents
 */
 
-private["_slots", "_debug", "_playerUID", "_response", "_vehsFriendly", "_vehsRaw", "_toSpawn", "_veh", "_hitPoints", "_fuel", "_gear", "_weapons", "_weapons", "_items", "_packs", "_response2"];
+private["_slots", "_debug", "_playerUID", "_response", "_vehsFriendly", "_vehsRaw", "_toSpawn", "_veh", "_safePOS", "_allHitpoints", "_actualHitpoints", "_dmg", "_response2"];
 params [ 
 	["_slot", -1, [0]],
 	["_playerObj", objNull, [objNull]],
@@ -38,46 +38,61 @@ if ((_response select 0) isEqualTo 1) then
 		_vehsFriendly = _response select 1 select 0;
 		_vehsRaw = _response select 1 select 1;
 		_toSpawn = _vehsRaw select _slot;
+		_toSpawn params [
+			["_vehClass", "", [""]],
+			["_gear", [[],[],[[],[]],[[],[]]]],
+			["_fuel", 1, [1]],
+			["_hitPoints", []],
+			["_position", [[0,0,0],0], [ [[0,0,0],0] ] ]
+		];
 		if (count _toSpawn > 0) then
 		{
 			_vehsFriendly set [_slot, []]; // Remove the vehicle from garage slot
 			_vehsRaw set [_slot, []];
 			[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
-			_pos = _toSpawn select 4 select 0;
-			_veh = createVehicle [_toSpawn select 0, _pos, [], 0, "CAN_COLLIDE"];
-			_veh setDir (_toSpawn select 4 select 1);
+			_veh = createVehicle [_vehClass, [0,0,0], [], 0, "CAN_COLLIDE"];
+			if!(_veh isKindOf 'SHIP')then{
+				_safePOS = [_position select 0,1,50,10,0,20,0] call BIS_fnc_findSafePos;
+			}else{
+				_safePOS = [_position select 0,1,80,10,1,20,0] call BIS_fnc_findSafePos;
+			};
+			_veh setPosATL _safePOS;
+			_veh setDir (_position select 1);
 			_veh call EPOCH_server_setVToken;
 			clearWeaponCargoGlobal _veh;
 			clearMagazineCargoGlobal _veh;
 			clearItemCargoGlobal _veh;
 			clearBackpackCargoGlobal _veh;
-			_hitPoints = _toSpawn select 3;
-			if (count _hitPoints > 0) then
-			{
-				{
-					_veh setHitPointDamage [_x select 0, _x select 1];
-				} forEach _hitPoints;
+			_allHitpoints = getAllHitPointsDamage _veh;
+			if !(_allHitpoints isEqualTo []) then{
+				_actualHitpoints = _allHitpoints select 0;
+				if ((count _actualHitpoints) == (count _hitpoints)) then{
+					{
+						_dmg = _hitpoints param [_forEachIndex,0];
+						_veh setHitIndex [_forEachIndex, _dmg];
+					} forEach _actualHitpoints;
+				};
 			};
-			_fuel = _toSpawn select 2;
 			_veh setFuel _fuel;
 			_veh setVehicleLock "LOCKEDPLAYER";
-			_gear = _toSpawn select 1;
-				_weapons = _gear select 0;
-					{
-						_veh addWeaponCargoGlobal [_x, 1];
-					} forEach _weapons;
-				_mags = _gear select 1;
-					{
-						_veh addMagazineAmmoCargo [_x select 0, 1, _x select 1];
-					} forEach _mags;
-				_items = _gear select 2;
-					{
-						_veh addItemCargoGlobal [_x, _items select 1 select _forEachIndex];
-					} forEach (_items select 0);
-				_packs = _gear select 3;
-					{
-						_veh addBackpackCargoGlobal [_x, _packs select 1 select _forEachIndex];
-					} forEach (_packs select 0);
+			_gear params [
+				["_weapons", [] ],
+				["_mags", [] ],
+				["_items", [[],[]] ],
+				["_packs", [[],[]] ]
+			];
+			{
+				_veh addWeaponCargoGlobal [_x, 1];
+			} forEach _weapons;
+			{
+				_veh addMagazineAmmoCargo [_x select 0, 1, _x select 1];
+			} forEach _mags;
+			{
+				_veh addItemCargoGlobal [_x, _items select 1 select _forEachIndex];
+			} forEach (_items select 0);
+			{
+				_veh addBackpackCargoGlobal [_x, _packs select 1 select _forEachIndex];
+			} forEach (_packs select 0);
 			if (_veh isKindOf "Car") then
 			{
 				_veh engineOn true;

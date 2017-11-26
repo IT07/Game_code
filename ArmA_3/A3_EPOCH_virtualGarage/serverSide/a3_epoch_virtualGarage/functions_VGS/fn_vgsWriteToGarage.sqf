@@ -45,7 +45,7 @@ _playerUID = getPlayerUID _playerObj;
 // Define the classname of _veh
 _typeOf = typeOf _vehObj;
 // Get the storage usage
-_gear = [[],[],[],[]]; // 0: Weapons | 1: Mags | 2: Items | 3: Backpacks
+_gear = [[],[],[[],[]],[[],[]]]; // 0: Weapons | 1: Mags | 2: Items | 3: Backpacks
 
 {
 	(_gear select 1) pushBack [_x select 0, _x select 1];
@@ -123,16 +123,7 @@ _dir = getDir _vehObj;
 // Get the fuel level of _veh
 _fuel = fuel _vehObj;
 // Get the hitPoint(s) damage of given vehicle
-_hitPoints = [configFile >> "CfgVehicles" >> _typeOf >> "HitPoints",0] call BIS_fnc_returnChildren;
-_damagedParts = [];
-{
-	if (_vehObj getHitPointDamage (configName _x) > 0) then
-	{
-		_partDamage = _vehObj getHitPointDamage (configName _x);
-		_overallDamage = _overallDamage + _partDamage;
-		_damagedParts pushBack [configName _x, _partDamage];
-	};
-} forEach _hitPoints;
+_hitpoints = (getAllHitPointsDamage _vehObj) param [2,[]];
 
 // Get existing vehicles
 _response = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
@@ -150,7 +141,7 @@ if ((_response select 0) isEqualTo 1) then
 		(_vehsFriendly select _slot) pushBack _typeOf;
 		{
 			(_vehsRaw select _slot) pushBack _x
-		} forEach [_typeOf, _gear, _fuel, _damagedParts, [_pos, _dir]];
+		} forEach [_typeOf, _gear, _fuel, _hitpoints, [_pos, _dir]];
 		[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
 		{
 			moveOut _x;
