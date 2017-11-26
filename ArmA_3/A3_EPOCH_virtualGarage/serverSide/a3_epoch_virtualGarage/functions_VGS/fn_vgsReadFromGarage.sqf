@@ -53,9 +53,9 @@ if ((_response select 0) isEqualTo 1) then
 			_veh = createVehicle [_vehClass, [0,0,0], [], 0, "CAN_COLLIDE"];
 			_veh allowDamage false;
 			if!(_veh isKindOf 'SHIP')then{
-				_safePOS = [_position select 0,1,50,10,0,20,0] call BIS_fnc_findSafePos;
+				_safePOS = [_position select 0,1,15,10,0,20,0] call BIS_fnc_findSafePos;
 			}else{
-				_safePOS = [_position select 0,1,80,10,1,20,0] call BIS_fnc_findSafePos;
+				_safePOS = [_position select 0,1,80,10,1,20,1] call BIS_fnc_findSafePos;
 			};
 			_safePOS set[2,0.1];
 			_veh setPosATL _safePOS;
