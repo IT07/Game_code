@@ -45,78 +45,7 @@ _playerUID = getPlayerUID _playerObj;
 // Define the classname of _veh
 _typeOf = typeOf _vehObj;
 // Get the storage usage
-_gear = [[],[],[[],[]],[[],[]]]; // 0: Weapons | 1: Mags | 2: Items | 3: Backpacks
-
-{
-	(_gear select 1) pushBack [_x select 0, _x select 1];
-} forEach (magazinesAmmoCargo _vehObj);
-
-_gear set [2, getItemCargo _vehObj];
-
-_itemCount = 0;
-{
-	_itemCount = _itemCount + _x;
-} forEach ((_gear select 2) select 1);
-
-{
-	(_gear select 0) pushBack (_x select 0);
-	_silencer = _x select 1;
-	if not(_silencer isEqualTo "") then { (_gear select 2 select 0) pushBack _silencer; (_gear select 2 select 1) pushBack 1 };
-	_light = _x select 2;
-	if not(_light isEqualTo "") then { (_gear select 2 select 0) pushBack _light; (_gear select 2 select 1) pushBack 1 };
-	_scope = _x select 3;
-	if not(_scope isEqualTo "") then { (_gear select 2 select 0) pushBack _scope; (_gear select 2 select 1) pushBack 1 };
-	if (count _x > 5) then
-	{
-		_mag = _x select 4;
-		if not(_mag isEqualTo "") then { (_gear select 1) pushBack [_mag select 0, _mag select 1] };
-		_bipod = _x select 5;
-		if not(_bipod isEqualTo "") then
-		{
-			_found = (_gear select 2 select 0) find _bipod;
-			switch _found do
-			{
-				case -1:
-				{
-					(_gear select 2 select 0) pushBack _bipod;
-					(_gear select 2 select 1) pushBack 1;
-				};
-				default
-				{
-					_count = (_gear select 2 select 1) select _found;
-					_count = _count + 1;
-					(_gear select 2 select 1) set [_found, _count];
-				};
-			};
-		};
-	};
-	if (count _x isEqualTo 5) then
-	{
-		_bipod = _x select 4;
-		if not(_bipod isEqualTo "") then
-		{
-			_found = (_gear select 2 select 0) find _bipod;
-			if (_found isEqualTo -1) then
-			{
-				(_gear select 2 select 0) pushBack _bipod;
-				(_gear select 2 select 1) pushBack 1
-			};
-			if (_found > -1) then
-			{
-				_count = (_gear select 2 select 1) select _found;
-				_count = _count + 1;
-				(_gear select 2 select 1) set [_found, _count]
-			};
-		};
-	};
-} forEach (weaponsItemsCargo _vehObj);
-
-_gear set [3, getBackpackCargo _vehObj];
-
-_packCount = 0;
-{
-	_packCount = _packCount + _x;
-} forEach ((_gear select 3) select 1);
+_inventory = _vehObj call EPOCH_server_CargoSave;
 
 _pos = getPosATL _vehObj;
 _dir = getDir _vehObj;
@@ -141,7 +70,7 @@ if ((_response select 0) isEqualTo 1) then
 		(_vehsFriendly select _slot) pushBack _typeOf;
 		{
 			(_vehsRaw select _slot) pushBack _x
-		} forEach [_typeOf, _gear, _fuel, _hitpoints, [_pos, _dir]];
+		} forEach [_typeOf, _inventory, _fuel, _hitpoints, [_pos, _dir]];
 		[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
 		{
 			moveOut _x;
