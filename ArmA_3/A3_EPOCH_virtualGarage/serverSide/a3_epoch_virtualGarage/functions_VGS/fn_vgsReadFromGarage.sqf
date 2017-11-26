@@ -51,13 +51,16 @@ if ((_response select 0) isEqualTo 1) then
 			_vehsRaw set [_slot, []];
 			[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
 			_veh = createVehicle [_vehClass, [0,0,0], [], 0, "CAN_COLLIDE"];
+			_veh allowDamage false;
 			if!(_veh isKindOf 'SHIP')then{
 				_safePOS = [_position select 0,1,50,10,0,20,0] call BIS_fnc_findSafePos;
 			}else{
 				_safePOS = [_position select 0,1,80,10,1,20,0] call BIS_fnc_findSafePos;
 			};
+			_safePOS set[2,0.1];
 			_veh setPosATL _safePOS;
-			_veh setDir (_position select 1);
+			//_veh setDir _position select 1; not used anymore will remove from save
+			_veh allowDamage true;
 			_veh call EPOCH_server_setVToken;
 			clearWeaponCargoGlobal _veh;
 			clearMagazineCargoGlobal _veh;
