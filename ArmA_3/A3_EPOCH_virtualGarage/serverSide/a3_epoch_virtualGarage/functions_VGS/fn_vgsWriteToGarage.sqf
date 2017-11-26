@@ -155,7 +155,6 @@ if ((_response select 0) isEqualTo 1) then
 		{
 			moveOut _x;
 		} forEach (crew _vehObj);
-		_vehObj setDamage 1;
 		deleteVehicle _vehObj;
 		if not(isNull _playerObj) then
 		{
