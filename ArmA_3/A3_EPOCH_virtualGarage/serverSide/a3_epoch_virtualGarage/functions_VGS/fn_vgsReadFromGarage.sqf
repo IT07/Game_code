@@ -30,7 +30,9 @@ _slots = "maxGarageSlots" call VGS_fnc_vgsGetServerSetting;
 if !(_slot < _slots) exitWith {diag_log format["[EPOCH VGS]: ReadFromGarage Error - slot not less than max slots - data:%1", [_slot, _slots]]};
 
 _playerUID = getPlayerUID _playerObj;
-_response = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
+_response = ["VirtualGarage", _playerUID] call EPOCH_fnc_server_hiveGETRANGE;
+if((_response select 1) isEqualTo []) exitWith {diag_log format["[EPOCH VGS]: WriteToGarage Client DB entry error - data:%1m", _response]};
+//_response = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
 if ((_response select 0) isEqualTo 1) then
 {
 	if (typeName (_response select 1) isEqualTo "ARRAY") then
@@ -49,17 +51,15 @@ if ((_response select 0) isEqualTo 1) then
 		{
 			_vehsFriendly set [_slot, []]; // Remove the vehicle from garage slot
 			_vehsRaw set [_slot, []];
-			[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
-			_veh = createVehicle [_vehClass, [0,0,0], [], 0, "CAN_COLLIDE"];
+			_expiresVG = "expiresVirtualGarage" call VGS_fnc_vgsGetServerSetting;
+			_return = ["VirtualGarage", _playerUID, _expiresVG, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSETEX;
+			//[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
+			_veh = createVehicle [_vehClass, _position select 0, [], 0, "CAN_COLLIDE"];
 			_veh allowDamage false;
-			if!(_veh isKindOf 'SHIP')then{
-				_safePOS = [_position select 0,1,15,10,0,20,0] call BIS_fnc_findSafePos;
-			}else{
-				_safePOS = [_position select 0,1,80,10,1,20,1] call BIS_fnc_findSafePos;
-			};
-			_safePOS set[2,0.1];
-			_veh setPosATL _safePOS;
-			//_veh setDir _position select 1; not used anymore will remove from save
+			//if(_veh isKindOf 'SHIP')then{
+			//	_safePOS = [_position select 0,1,80,10,1,20,1] call BIS_fnc_findSafePos;
+			//};
+			_veh setDir _position select 1;
 			_veh allowDamage true;
 			_veh call EPOCH_server_setVToken;
 			clearWeaponCargoGlobal _veh;
@@ -81,7 +81,8 @@ if ((_response select 0) isEqualTo 1) then
 			[_veh,_gear] call EPOCH_server_CargoFill;
 			_veh setOwner (owner _playerObj);
 			// Refetch the vehicles from db and send it to Client
-			_response2 = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
+			_response2 = ["VirtualGarage", _playerUID] call EPOCH_fnc_server_hiveGETRANGE;
+			//_response2 = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
 			if ((_response2 select 0) isEqualTo 1) then
 			{
 				if (typeName (_response2 select 1) isEqualTo "ARRAY") then
