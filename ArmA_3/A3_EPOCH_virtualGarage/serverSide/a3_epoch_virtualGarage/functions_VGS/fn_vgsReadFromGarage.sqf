@@ -40,16 +40,11 @@ if ((_response select 0) isEqualTo 1) then
 		_vehsFriendly = _response select 1 select 0;
 		_vehsRaw = _response select 1 select 1;
 		_toSpawn = _vehsRaw select _slot;
-		_toSpawn params [
-			["_vehClass", "", [""]],
-			["_gear", []],
-			["_fuel", 1, [1]],
-			["_hitPoints", []],
-			["_position", [] ]
-		];
+		_toSpawn params ["_vehClass","_position","_damage","_hitPoints","_fuel","_gear","_ammo","_texture","_baseClass"];		
 		_position params [
-			["_pos",[0,0,0]],
-			["_dir",0]
+			["_pos", [ [0,0,0],[0,0,0] ] ],
+			["_vectorDir", [0,0,0]],
+			["_vectorUp", [0,0,0]]
 		];
 		if (count _toSpawn > 0) then
 		{
@@ -57,12 +52,12 @@ if ((_response select 0) isEqualTo 1) then
 			_vehsRaw set [_slot, []];
 			_expiresVG = "expiresVirtualGarage" call VGS_fnc_vgsGetServerSetting;
 			_return = ["VirtualGarage", _playerUID, _expiresVG, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSETEX;
-			_veh = createVehicle [_vehClass, _pos, [], 0, "CAN_COLLIDE"];
+			_veh = createVehicle [_vehClass, _pos select 0, [], 0, "CAN_COLLIDE"];
 			//if(_veh isKindOf 'SHIP')then{
-			//	_safePOS = [_pos,1,80,10,1,20,1] call BIS_fnc_findSafePos;
+			//	_safePOS = [_pos select 0,1,80,10,1,20,1] call BIS_fnc_findSafePos;
 			//};
 			_veh allowDamage false;
-			_veh setDir _dir;
+			_veh setvectorDirAndUp [_vectorDir,_vectorUp];
 			_veh call EPOCH_server_setVToken;
 			_veh setFuel _fuel;
 			_veh setVehicleLock "LOCKEDPLAYER";
@@ -72,6 +67,63 @@ if ((_response select 0) isEqualTo 1) then
 			clearBackpackCargoGlobal _veh;
 			[_veh,_gear] call EPOCH_server_CargoFill;
 			_veh setOwner (owner _playerObj);
+			
+			// apply persistent textures
+			_cfgEpochVehicles = 'CfgEpochVehicles' call EPOCH_returnConfig;
+			_availableColorsConfig = (_cfgEpochVehicles >> _vehClass >> "availableColors");
+			if (isArray(_availableColorsConfig)) then {
+				_colors = getArray(_availableColorsConfig);
+				_textureSelectionIndex = (_cfgEpochVehicles >> _vehClass >> "textureSelectionIndex");
+				_selections = if (isArray(_textureSelectionIndex)) then { getArray(_textureSelectionIndex) } else { [0] };
+				_count = (count _colors) - 1;
+				{
+					_textures = _colors select 0;
+					if (_count >= _forEachIndex) then {
+						_textures = _colors select _forEachIndex;
+					};
+					_veh setObjectTextureGlobal [_x, _textures  select _color];
+				} forEach _selections;
+				_veh setVariable ["VEHICLE_TEXTURE", _color];
+			};
+			if !(_baseClass isequalto "") then {
+				_veh setvariable ["VEHICLE_BASECLASS",_baseClass];
+			};
+			_disableVehicleTIE = [_serverSettingsConfig, "disableVehicleTIE", true] call EPOCH_fnc_returnConfigEntry;
+			// disable thermal imaging equipment
+			if (_disableVehicleTIE) then {
+				_veh disableTIEquipment true;
+			};
+			_removeweapons = [_serverSettingsConfig, "removevehweapons", []] call EPOCH_fnc_returnConfigEntry;
+			if !(_removeweapons isequalto []) then {
+				{
+					_veh removeWeaponGlobal _x;
+				} foreach _removeweapons;
+			};
+			_removemagazinesturret = [_serverSettingsConfig, "removevehmagazinesturret", []] call EPOCH_fnc_returnConfigEntry;
+			if !(_removemagazinesturret isequalto []) then {
+				{
+					_veh removeMagazinesTurret _x;
+				} foreach _removemagazinesturret;
+			};
+			// remove and add back magazines
+			if !(_ammo isequalto []) then {
+				if ((_ammo select 0) isequaltype true) then {
+					{
+						_veh removeMagazinesTurret [_x select 0, _x select 1];
+					} foreach magazinesAllTurrets _veh;
+					{
+						if ((_x select 2) > 0) then {
+							_veh addMagazineTurret [_x select 0,_x select 1,_x select 2];
+						};
+					} foreach (_ammo select 1);
+				}
+				else
+				{
+					{_veh removeMagazineGlobal _x}count (magazines _veh);
+					{_veh addMagazine _x}count _ammo;
+				};
+			};
+			
 			_veh allowDamage true;
 			_allHitpoints = getAllHitPointsDamage _veh;
 			if !(_allHitpoints isEqualTo []) then{

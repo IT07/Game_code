@@ -71,7 +71,7 @@ if ((_response select 0) isEqualTo 1) then
 		(_vehsFriendly select _slot) pushBack _typeOf;
 		{
 			(_vehsRaw select _slot) pushBack _x
-		} forEach [_typeOf, _inventory, _fuel, _hitpoints, [_pos, _dir]];
+		} forEach [_typeOf, [(getposATL _vehObj call EPOCH_precisionPos),vectordir _vehObj,vectorup _vehObj], damage _vehObj, _hitpoints, _fuel, _inventory, [true,magazinesAllTurrets _vehObj], _vehObj getVariable ["VEHICLE_TEXTURE",0], _vehObj getVariable ["VEHICLE_BASECLASS",""]];
 		_expiresVG = "expiresVirtualGarage" call VGS_fnc_vgsGetServerSetting;
 		_return = ["VirtualGarage", _playerUID, _expiresVG, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSETEX;
 		{
