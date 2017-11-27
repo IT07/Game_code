@@ -8,7 +8,7 @@
 class cfgVGSclient
 {
 	// Settings here
-	debug = 0; // 1 = ON // 0 = OFF
+	debug = 1; // 1 = ON // 0 = OFF
 	range = 25; // Vehicles within this range of player can be moved into garage
 	useScrollWheel = 1; // Scroll Wheel VGS Menu
 	requireJammer = 0; // 1 = ON // 0 = OFF

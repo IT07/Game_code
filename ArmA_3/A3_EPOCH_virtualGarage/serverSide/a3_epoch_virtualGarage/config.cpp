@@ -7,7 +7,7 @@
 
 class cfgVGS
 {
-	debug = 0; // 0 = OFF
+	debug = 1; // 0 = OFF
 	maxGarageSlots = 7; // Self-explenatory, right?
 	vehBlacklist[] = {"O_Truck_Big_cock_F"}; // Put classnames of disallowed vehicles in here
 	expiresVirtualGarage = 604800; // time is in seconds
