@@ -1,6 +1,8 @@
 /*
     Author: IT07
 
+	Contributor: DirtySanchez from DonkeyPunch.INFO
+
     Description:
     moves given selected vehicle OUT of the virtual garage
 
@@ -40,25 +42,8 @@ if not isNil"_dsp" then
                             if (typeName EPOCH_vgsMyKey isEqualTo "STRING") then
                             {
                                 _ctrlFeedback ctrlSetText "Key has correct typeName.";
-                                EPOCH_vgsPV = ["Read",[_slot, player, EPOCH_vgsMyKey]];
-                                publicVariableServer "EPOCH_vgsPV";
-                                EPOCH_vgsPV = nil;
+								[_slot, player, EPOCH_vgsMyKey] remoteExec ["VGS_fnc_vgsReadFromGarage",2];
                                 _ctrlFeedback ctrlSetText "Requesting data from server...";
-                                _changed = [_vehs, "EPOCH_vgsMyGarage"] call SC_fnc_vgsWaitForChange;
-                                if _changed then
-                                {
-                                    _ctrlFeedback ctrlSetText "Server data received!";
-                                    _refreshed = ["Inside"] call SC_fnc_vgsRefresh;
-                                    if _refreshed then
-                                    {
-                                        _ctrlFeedback ctrlSetText "Garage vehicles reloaded.";
-                                        _refreshed = ["Outside"] call SC_fnc_vgsRefresh;
-                                        if _refreshed then
-                                        {
-                                            _ctrlFeedback ctrlSetText "Loading done.";
-                                        };
-                                    };
-                                };
                             };
                         };
                     };
