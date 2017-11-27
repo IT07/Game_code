@@ -77,6 +77,7 @@ if ((_response select 0) isEqualTo 1) then
 		{
 			moveOut _x;
 		} forEach (crew _vehObj);
+		[_vehObj, "VGSMoveIn"] call  EPOCH_server_save_killedVehicle;
 		deleteVehicle _vehObj;
 		if not(isNull _playerObj) then
 		{
