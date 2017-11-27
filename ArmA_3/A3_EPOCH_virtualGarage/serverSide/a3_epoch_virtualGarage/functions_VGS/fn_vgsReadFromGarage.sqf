@@ -80,13 +80,15 @@ if ((_response select 0) isEqualTo 1) then
 					if (_count >= _forEachIndex) then {
 						_textures = _colors select _forEachIndex;
 					};
-					_veh setObjectTextureGlobal [_x, _textures  select _color];
+					_veh setObjectTextureGlobal [_x, _textures  select _texture];
 				} forEach _selections;
-				_veh setVariable ["VEHICLE_TEXTURE", _color];
+				_veh setVariable ["VEHICLE_TEXTURE", _texture];
 			};
+			
 			if !(_baseClass isequalto "") then {
 				_veh setvariable ["VEHICLE_BASECLASS",_baseClass];
 			};
+			_serverSettingsConfig = configFile >> "CfgEpochServer";
 			_disableVehicleTIE = [_serverSettingsConfig, "disableVehicleTIE", true] call EPOCH_fnc_returnConfigEntry;
 			// disable thermal imaging equipment
 			if (_disableVehicleTIE) then {
