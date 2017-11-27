@@ -57,7 +57,6 @@ _hitpoints = (getAllHitPointsDamage _vehObj) param [2,[]];
 // Get existing vehicles
 _response = ["VirtualGarage", _playerUID] call EPOCH_fnc_server_hiveGETRANGE;
 if((_response select 1) isEqualTo []) exitWith {diag_log format["[EPOCH VGS]: WriteToGarage Client DB entry error - data:%1m", _response]};
-//_response = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
 if ((_response select 0) isEqualTo 1) then
 {
 	if (typeName (_response select 1) isEqualTo "ARRAY") then
@@ -75,7 +74,6 @@ if ((_response select 0) isEqualTo 1) then
 		} forEach [_typeOf, _inventory, _fuel, _hitpoints, [_pos, _dir]];
 		_expiresVG = "expiresVirtualGarage" call VGS_fnc_vgsGetServerSetting;
 		_return = ["VirtualGarage", _playerUID, _expiresVG, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSETEX;
-		//[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
 		{
 			moveOut _x;
 		} forEach (crew _vehObj);

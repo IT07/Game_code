@@ -42,10 +42,14 @@ if ((_response select 0) isEqualTo 1) then
 		_toSpawn = _vehsRaw select _slot;
 		_toSpawn params [
 			["_vehClass", "", [""]],
-			["_gear", [[],[],[[],[]],[[],[]]]],
+			["_gear", []],
 			["_fuel", 1, [1]],
 			["_hitPoints", []],
-			["_position", [[0,0,0],0], [ [[0,0,0],0] ] ]
+			["_position", [] ]
+		];
+		_position params [
+			["_pos",[0,0,0]],
+			["_dir",0]
 		];
 		if (count _toSpawn > 0) then
 		{
@@ -53,19 +57,22 @@ if ((_response select 0) isEqualTo 1) then
 			_vehsRaw set [_slot, []];
 			_expiresVG = "expiresVirtualGarage" call VGS_fnc_vgsGetServerSetting;
 			_return = ["VirtualGarage", _playerUID, _expiresVG, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSETEX;
-			//[format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID, [_vehsFriendly, _vehsRaw]] call EPOCH_fnc_server_hiveSET;
-			_veh = createVehicle [_vehClass, _position select 0, [], 0, "CAN_COLLIDE"];
-			_veh allowDamage false;
+			_veh = createVehicle [_vehClass, _pos, [], 0, "CAN_COLLIDE"];
 			//if(_veh isKindOf 'SHIP')then{
-			//	_safePOS = [_position select 0,1,80,10,1,20,1] call BIS_fnc_findSafePos;
+			//	_safePOS = [_pos,1,80,10,1,20,1] call BIS_fnc_findSafePos;
 			//};
-			_veh setDir _position select 1;
-			_veh allowDamage true;
+			_veh allowDamage false;
+			_veh setDir _dir;
 			_veh call EPOCH_server_setVToken;
+			_veh setFuel _fuel;
+			_veh setVehicleLock "LOCKEDPLAYER";
 			clearWeaponCargoGlobal _veh;
 			clearMagazineCargoGlobal _veh;
 			clearItemCargoGlobal _veh;
 			clearBackpackCargoGlobal _veh;
+			[_veh,_gear] call EPOCH_server_CargoFill;
+			_veh setOwner (owner _playerObj);
+			_veh allowDamage true;
 			_allHitpoints = getAllHitPointsDamage _veh;
 			if !(_allHitpoints isEqualTo []) then{
 				_actualHitpoints = _allHitpoints select 0;
@@ -76,13 +83,9 @@ if ((_response select 0) isEqualTo 1) then
 					} forEach _actualHitpoints;
 				};
 			};
-			_veh setFuel _fuel;
-			_veh setVehicleLock "LOCKEDPLAYER";
-			[_veh,_gear] call EPOCH_server_CargoFill;
-			_veh setOwner (owner _playerObj);
+			
 			// Refetch the vehicles from db and send it to Client
 			_response2 = ["VirtualGarage", _playerUID] call EPOCH_fnc_server_hiveGETRANGE;
-			//_response2 = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
 			if ((_response2 select 0) isEqualTo 1) then
 			{
 				if (typeName (_response2 select 1) isEqualTo "ARRAY") then
