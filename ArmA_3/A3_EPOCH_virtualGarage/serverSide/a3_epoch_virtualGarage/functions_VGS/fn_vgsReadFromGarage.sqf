@@ -32,7 +32,6 @@ if !(_slot < _slots) exitWith {diag_log format["[EPOCH VGS]: ReadFromGarage Erro
 _playerUID = getPlayerUID _playerObj;
 _response = ["VirtualGarage", _playerUID] call EPOCH_fnc_server_hiveGETRANGE;
 if((_response select 1) isEqualTo []) exitWith {diag_log format["[EPOCH VGS]: WriteToGarage Client DB entry error - data:%1m", _response]};
-//_response = [format["EPOCH_vgsOwnedVehs_%1", _playerUID], _playerUID] call EPOCH_fnc_server_hiveGET;
 if ((_response select 0) isEqualTo 1) then
 {
 	if (typeName (_response select 1) isEqualTo "ARRAY") then
